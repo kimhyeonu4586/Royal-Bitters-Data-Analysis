@@ -63,9 +63,9 @@ def generate_purchases(customers, products, num_purchases=2500):
     return pd.DataFrame(purchases, columns=["purchaseID", "CustomerID", "ProductID", "Quantity", "Price", "TotalAmount", "purchaseDate", "Satisfaction"])
 
 # 데이터 생성
-customers = generate_customers(200)
+customers = generate_customers(400)
 products = generate_products()
-purchases = generate_purchases(customers, products, 1000)
+purchases = generate_purchases(customers, products, 2500)
 
 # 데이터 저장 또는 확인
 customers.to_csv("customers.csv", index=False)
