@@ -65,12 +65,26 @@ class CustomerRepositoryImpl(CustomerRepository):
         product_stats = purchases_products.groupby("ProductName").agg({
             "Quantity": "sum",
             "Satisfaction": "mean"
-        }).sort_values(by="Satisfaction", ascending=False).head(10)
+        })
 
-        # 형식에 맞게 변환
-        top_products = {
+        # 만족도 평균 기준 상위 10개
+        top_products_by_satisfaction = product_stats.sort_values(
+            by="Satisfaction", ascending=False
+        ).head(10)
+
+        top_products_satisfaction = {
             product: f"{int(row['Quantity'])} [{row['Satisfaction']:.2f}]"
-            for product, row in product_stats.iterrows()
+            for product, row in top_products_by_satisfaction.iterrows()
+        }
+
+        # 총 주문 수량 기준 상위 10개
+        top_products_by_quantity = product_stats.sort_values(
+            by="Quantity", ascending=False
+        ).head(10)
+
+        top_products_quantity = {
+            product: f"{int(row['Quantity'])} [{row['Satisfaction']:.2f}]"
+            for product, row in top_products_by_quantity.iterrows()
         }
 
         # 고객별 총 구매량 및 금액
@@ -94,6 +108,7 @@ class CustomerRepositoryImpl(CustomerRepository):
 
         return {
             "category_sales": category_sales,
-            "top_products": top_products,
+            "top_products_by_satisfaction": top_products_satisfaction,
+            "top_products_by_quantity": top_products_quantity,
             "most_frequent_customer": most_frequent_customer
         }
