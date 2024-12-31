@@ -10,8 +10,11 @@ fake = Faker('ko_KR')
 # 1. 고객 데이터 생성
 def generate_customers(num_customers=400):
     customers = []
+    korean_domains = ["naver.com", "daum.net", "gmail.com", "hanmail.net", "kakao.com"]
     for _ in range(num_customers):
-        customer_id = fake.uuid4()
+        local_part = fake.user_name()
+        domain = random.choice(korean_domains)
+        customer_id = f"{local_part}@{domain}"
         name = fake.name()
         age = random.randint(18, 70)
         gender = random.choice(["M", "F"])
