@@ -56,7 +56,8 @@ class CustomerRepositoryImpl(CustomerRepository):
     def analyze_trends(self):
         # 구매 데이터 분석
         purchases_products = self.purchases.merge(self.products, on="ProductID")
-
+        full_data = purchases_products.merge(self.customers, on="CustomerID")
+        
         # 카테고리별 총 구매량
         category_sales = purchases_products.groupby("Category")["Quantity"].sum().to_dict()
 
@@ -64,12 +65,50 @@ class CustomerRepositoryImpl(CustomerRepository):
         product_stats = purchases_products.groupby("ProductName").agg({
             "Quantity": "sum",
             "Satisfaction": "mean"
-        }).sort_values(by="Satisfaction", ascending=False).head(10)
+        })
 
-        # 형식에 맞게 변환
-        top_products = {
-            product: f"{row['Quantity']} [{row['Satisfaction']:.2f}]"
-            for product, row in product_stats.iterrows()
+        # 만족도 평균 기준 상위 10개
+        top_products_by_satisfaction = product_stats.sort_values(
+            by="Satisfaction", ascending=False
+        ).head(10)
+
+        top_products_satisfaction = {
+            product: f"{int(row['Quantity'])} [{row['Satisfaction']:.2f}]"
+            for product, row in top_products_by_satisfaction.iterrows()
         }
 
-        return {"category_sales": category_sales, "top_products": top_products}
+        # 총 주문 수량 기준 상위 10개
+        top_products_by_quantity = product_stats.sort_values(
+            by="Quantity", ascending=False
+        ).head(10)
+
+        top_products_quantity = {
+            product: f"{int(row['Quantity'])} [{row['Satisfaction']:.2f}]"
+            for product, row in top_products_by_quantity.iterrows()
+        }
+
+        # 고객별 총 구매량 및 금액
+        top_customer = full_data.groupby("CustomerID").agg({
+            "Quantity": "sum",
+            "TotalAmount": "sum"
+        }).sort_values(by="Quantity", ascending=False).head(1).reset_index()
+
+        # 고객 정보 병합
+        top_customer_info = top_customer.merge(self.customers, on="CustomerID").iloc[0]
+
+        # 상위 고객 정보 포맷팅
+        most_frequent_customer = {
+            "CustomerID": str(top_customer_info["CustomerID"]),
+            "Name": top_customer_info["Name"],
+            "Total Purchases": int(top_customer_info["Quantity"]),
+            "Total Spent": float(top_customer_info["TotalAmount"]),
+            "SignupDate": str(top_customer_info["SignupDate"]),
+            "Location": top_customer_info["Location"]
+        }
+
+        return {
+            "category_sales": category_sales,
+            "top_products_by_satisfaction": top_products_satisfaction,
+            "top_products_by_quantity": top_products_quantity,
+            "most_frequent_customer": most_frequent_customer
+        }
