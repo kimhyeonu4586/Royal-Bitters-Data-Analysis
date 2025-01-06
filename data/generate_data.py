@@ -24,30 +24,54 @@ def generate_customers(num_customers=400):
     return pd.DataFrame(customers, columns=["CustomerID", "Name", "Age", "Gender", "Location", "SignupDate"])
 
 # 2. 상품 데이터 생성
+
 def generate_products():
     categories = {
-        "Beer": [
-            "Cass", "Terra", "Asahi", "Corona", "Tiger", "Sapporo", "Kirin Ichibang", "Hite", "Kelly", "Guinness", "Kozel"
-        ],
-        "Wine": [
-            "Sangiovese", "Pinot Noir", "Syrah", "Merlot", "Cabernet Sauvignon",
-            "Chenin Blanc", "Pinot Gris", "Riesling", "Sauvignon Blanc", "Chardonnay"
-        ],
-        "Whiskey": [
-            "Ballantine's 12", "Ballantine's 21", "Ballantine's 30",
-            "Glenfiddich 12", "Glenfiddich 21", "Glenfiddich 30",
-            "Johnnie Walker Green", "Johnnie Walker Black", "Johnnie Walker Blue", "Johnnie Walker Red"
-        ]
+        "Beer": {
+            "Cass": 1400, 
+            "Terra": 1980, 
+            "Asahi": 3000, 
+            "Corona": 2650, 
+            "Tiger": 3000,
+            "Sapporo": 3000, 
+            "Kirin Ichibang": 3000, 
+            "Hite": 2170, 
+            "Kelly": 2170,
+            "Guinness": 3000
+        },
+        "Wine": {
+            "Ruffino Lumina Pinot Grigio": 39000,
+            "Meiomi Pinot Noir": 90000,
+            "Bontara Merlot": 65000,
+            "Sonoma Estate Cabernet Sauvignon": 85000,
+            "19 Crimes Red Blend": 67200,
+            "David's Nadia Chenin Blanc 2017": 61800,
+            "100 Hectares Grande Reserva Branco": 60000,
+            "Gunderloch Riesling Royal Blue": 85000,
+            "Fleur de Mer Rosé": 36000,
+            "Louis Jadot Bourgogne Chardonnay": 35000
+        },
+        "Whiskey": {
+            "Ballantine's 12 Year": 49000,
+            "Ballantine's 21 Year": 177000,
+            "Ballantine's 30 Year": 524900,
+            "Glenfiddich 12 Year": 67500,
+            "Glenfiddich 21 Year": 279000,
+            "Glenfiddich 30 Year": 1250000,
+            "Johnnie Walker Green Label": 69000,
+            "Johnnie Walker Black Label": 39000,
+            "Johnnie Walker Blue Label": 338000,
+            "Johnnie Walker Red Label": 22000
+        }
     }
 
     products = []
-    for category, product_names in categories.items():
-        for product_name in product_names:
+    for category, products_info in categories.items():
+        for product_name, price in products_info.items():
             product_id = fake.uuid4()  # 고유 ID 생성
-            price = round(random.uniform(5, 100), 2)  # 5에서 100 사이의 랜덤 가격 생성
             products.append([product_id, product_name, category, price])
 
-    return pd.DataFrame(products, columns=["ProductID", "ProductName", "Category", "Price"])
+    return pd.DataFrame(products, columns=["ProductID", "ProductName", "Category", "Price (KRW)"])
 
 # 3. 구매 데이터 생성
 def generate_purchases(customers, products, num_purchases=2500):
@@ -58,12 +82,12 @@ def generate_purchases(customers, products, num_purchases=2500):
         product = products.sample(1).iloc[0]
         product_id = product["ProductID"]
         quantity = random.randint(1, 5)
-        price = product["Price"]
+        price = product["Price (KRW)"]
         total_amount = round(quantity * price, 2)
         purchase_date = fake.date_between(start_date="-1y", end_date="today")
         satisfaction = random.randint(1,10)
         purchases.append([purchase_id, customer_id, product_id, quantity, price, total_amount, purchase_date, satisfaction])
-    return pd.DataFrame(purchases, columns=["purchaseID", "CustomerID", "ProductID", "Quantity", "Price", "TotalAmount", "purchaseDate", "Satisfaction"])
+    return pd.DataFrame(purchases, columns=["purchaseID", "CustomerID", "ProductID", "Quantity", "Price (KRW)", "TotalAmount", "purchaseDate", "Satisfaction"])
 
 # 데이터 생성
 customers = generate_customers(400)
