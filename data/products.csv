@@ -1,32 +1,31 @@
-ProductID,ProductName,Category,Price
-ce486923-16b6-487f-9d90-c7362676bf26,Cass,Beer,52.54
-a4e0fb6b-f8aa-449e-b53c-d14fe7cc91bc,Terra,Beer,98.18
-aac20dea-7a72-4c65-a2ba-b76aa873ab07,Asahi,Beer,22.24
-a612c8e4-5f20-4f2c-bbbc-7387e6f65593,Corona,Beer,35.06
-d91d6038-5f36-4e01-8343-8b16a86ae44d,Tiger,Beer,51.85
-db1a51e6-b44a-438f-847d-b2d81ceb4808,Sapporo,Beer,47.13
-226365f7-2189-4fef-9fe0-5a0902435359,Kirin Ichibang,Beer,31.92
-efd8b686-d357-4975-9d67-3e71a220cd9a,Hite,Beer,86.14
-8453a826-7ff6-484e-a1fb-37dc97613a33,Kelly,Beer,13.52
-c9e865eb-f9a2-4788-a0c0-97969920c12a,Guinness,Beer,27.25
-30aeaaf1-d40e-438d-9f4e-8c05c5e4b602,Kozel,Beer,34.64
-0e17475e-ef71-4c52-aef3-9754c89a99b5,Sangiovese,Wine,29.92
-d382dc0f-4e08-49d9-ab14-da83fd506534,Pinot Noir,Wine,38.87
-2e755e15-1e0f-4d85-bc12-283516f30c13,Syrah,Wine,36.16
-f37db113-f03f-4adf-8bd2-9e106e9acda8,Merlot,Wine,40.38
-412fd527-1abc-487d-9157-9fea5e725c16,Cabernet Sauvignon,Wine,60.79
-f320edd7-da52-4b58-ba71-cc7700eb1e41,Chenin Blanc,Wine,46.0
-d3d7fef2-04ef-4e4a-b072-7e79c9cecf48,Pinot Gris,Wine,75.96
-4662a279-df61-46d6-8a79-a0154c084a99,Riesling,Wine,41.49
-e708baf0-ec90-4fcc-ad8b-8a3a4707622a,Sauvignon Blanc,Wine,49.76
-028af21d-bcb0-4cc1-85ca-993b9aa4061b,Chardonnay,Wine,51.1
-777ee3be-5b16-489f-a05f-658687fbb141,Ballantine's 12,Whiskey,5.51
-32d6cc8d-d499-4b61-8fb6-9feb289cfc46,Ballantine's 21,Whiskey,25.49
-65a169e4-9996-45be-8a01-aeaa50ee46af,Ballantine's 30,Whiskey,24.89
-6f68f76b-0bb3-4538-ac1a-461d4f7dd3b9,Glenfiddich 12,Whiskey,9.73
-00f838a6-de91-4ce2-bed9-8e35cb1c7b80,Glenfiddich 21,Whiskey,70.91
-97a25091-a1ab-4629-9374-0cb0c6745b23,Glenfiddich 30,Whiskey,39.96
-041df3d8-c512-40a1-9984-d49d9e47e7d5,Johnnie Walker Green,Whiskey,84.58
-1a46a873-1b0d-4291-a940-ddb430aa36aa,Johnnie Walker Black,Whiskey,96.54
-683303fb-bc4d-4f2b-8969-5730ed022f31,Johnnie Walker Blue,Whiskey,37.21
-77244092-86fb-4efe-b7fc-7b6f6c2fa165,Johnnie Walker Red,Whiskey,94.47
+ProductID,ProductName,Category,Price (KRW)
+885a6a4d-ba6c-40cd-b70d-d62d4a077db1,Cass,Beer,1400
+207539df-41ad-42e8-a71b-3a11aaf1b585,Terra,Beer,1980
+b840920a-356d-42d0-87d7-f8913fbaefaa,Asahi,Beer,3000
+1bf89619-4141-4c4a-bf82-469fd5fcc874,Corona,Beer,2650
+6c7cf5c9-d664-4a4f-8a9a-625fe2ff6049,Tiger,Beer,3000
+d4ec47bc-08f7-43f4-9885-3be43405262b,Sapporo,Beer,3000
+db77c32b-b1e4-4e31-a6ee-2bca4c50bc8f,Kirin Ichibang,Beer,3000
+3b0404b9-133f-4eba-a97e-4cd22d504828,Hite,Beer,2170
+54c6a5eb-1918-45cd-91aa-374473471844,Kelly,Beer,2170
+3ccff63d-460d-467b-9858-a45076fe497e,Guinness,Beer,3000
+a5f458f9-8d39-48ad-a0cb-66e4f7852f07,Ruffino Lumina Pinot Grigio,Wine,39000
+8d5e7213-65e7-427e-aa32-5fa78503f727,Meiomi Pinot Noir,Wine,90000
+2d04110a-503a-4ed3-91c2-670e51784f65,Bontara Merlot,Wine,65000
+d681ed82-99b9-4644-a2d9-13572adc134a,Sonoma Estate Cabernet Sauvignon,Wine,85000
+994430f1-44b4-484e-8124-8a3a0ea7a03f,19 Crimes Red Blend,Wine,67200
+3141b17b-4443-4c0c-ad2c-b451397dd8b8,David's Nadia Chenin Blanc 2017,Wine,61800
+6e415539-41b8-477c-866c-ed432ca9c191,100 Hectares Grande Reserva Branco,Wine,60000
+d07607cf-fe0d-46a3-a937-95d2b2fd3c2f,Gunderloch Riesling Royal Blue,Wine,85000
+4e265019-e973-49e0-af0f-a027e4ebf349,Fleur de Mer Rosé,Wine,36000
+41566265-df60-49bb-a3c6-dcea014b35b6,Louis Jadot Bourgogne Chardonnay,Wine,35000
+82c99ea7-94c2-4ce6-8ab3-81abd779df46,Ballantine's 12 Year,Whiskey,49000
+666ab3dc-cd20-41bd-817c-d0103cecf529,Ballantine's 21 Year,Whiskey,177000
+4519177f-172f-4070-9d2d-31dcda00c95a,Ballantine's 30 Year,Whiskey,524900
+9bd08e02-9822-40e2-bad0-ce7c74ec13c8,Glenfiddich 12 Year,Whiskey,67500
+31b4fb8f-a71b-43ac-abcd-4f357390738b,Glenfiddich 21 Year,Whiskey,279000
+490bc694-4873-4f8c-89dd-804c9a09843e,Glenfiddich 30 Year,Whiskey,1250000
+f45e98c4-a031-4ffc-85ce-60f0188aca25,Johnnie Walker Green Label,Whiskey,69000
+0c2e4efc-da55-4f14-a208-fae43756fad6,Johnnie Walker Black Label,Whiskey,39000
+897111bf-edf0-4ce2-a88b-6db73fdf81ac,Johnnie Walker Blue Label,Whiskey,338000
+8dbffd8a-bd16-45f3-b1e0-36059037bcde,Johnnie Walker Red Label,Whiskey,22000
