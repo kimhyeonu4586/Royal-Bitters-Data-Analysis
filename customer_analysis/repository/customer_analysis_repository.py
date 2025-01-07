@@ -38,3 +38,10 @@ class CustomerRepository(ABC):
         구매 동향을 분석하고 결과를 반환.
         """
         pass
+
+    @abstractmethod
+    def perform_pca_and_split(self, n_components: int):
+        """
+        PCA 처리와 데이터를 학습 및 테스트 세트로 분리.
+        """
+        pass
