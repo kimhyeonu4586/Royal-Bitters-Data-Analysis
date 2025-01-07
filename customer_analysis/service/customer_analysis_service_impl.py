@@ -1,5 +1,7 @@
 from customer_analysis.repository.customer_analysis_repository_impl import CustomerRepositoryImpl
 from customer_analysis.service.customer_analysis_service import CustomerService
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report
 
 
 class CustomerServiceImpl(CustomerService):
@@ -28,3 +30,21 @@ class CustomerServiceImpl(CustomerService):
         # 구매 동향 분석
         trends = self.__repository.analyze_trends()
         return trends
+
+    async def predict_churn_with_pca(self):
+        """
+        PCA 처리(n_components=2 고정)와 고객 이탈 예측 수행.
+        """
+        X_train, X_test, y_train, y_test = self.__repository.perform_pca_and_split(2)
+        
+        model = self.__repository.train_model_with_pca(X_train, y_train)
+        
+        accuracy, report = self.__repository.evaluate_model_with_pca(model, X_test, y_test)
+
+        print(X_train.shape, y_train.shape)
+        print(X_test.shape, y_test.shape)
+        
+        return {
+            "accuracy": accuracy, 
+            "classification_report": report
+        }

@@ -3,6 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, accuracy_score
 from customer_analysis.repository.customer_analysis_repository import CustomerRepository
+from sklearn.decomposition import PCA
 
 
 class CustomerRepositoryImpl(CustomerRepository):
@@ -30,13 +31,16 @@ class CustomerRepositoryImpl(CustomerRepository):
             "TotalAmount": "Monetary"
         })
 
+        customer_info = self.customers[["CustomerID", "Gender", "Age"]].set_index("CustomerID")
+        rfm = rfm.join(customer_info)
         # 이탈 여부 생성
         rfm["Churn"] = (rfm["Recency"] > 90).astype(int)
         return rfm
 
     def split_data(self, rfm):
         # 학습 및 테스트 데이터 분리
-        X = rfm[["Recency", "Frequency", "Monetary", "Satisfaction"]]
+        rfm["Gender"] = rfm["Gender"].map({"M":0, "F": 1})
+        X = rfm[["Recency", "Frequency", "Monetary", "Satisfaction", "Age", "Gender"]]
         y = rfm["Churn"]
         return train_test_split(X, y, test_size=0.3, random_state=42)
 
@@ -112,3 +116,68 @@ class CustomerRepositoryImpl(CustomerRepository):
             "top_products_by_quantity": top_products_quantity,
             "most_frequent_customer": most_frequent_customer
         }
+
+    def perform_pca_and_split(self, n_components: int):
+        """
+        PCA 처리 및 학습/테스트 데이터 분리.
+        """
+        purchases_products = self.purchases.merge(self.products, on="ProductID")
+        
+        #print(f"purchase_products :" ,purchases_products)
+
+        full_data = purchases_products.merge(self.customers, on="CustomerID")
+        
+        #print(f"full_data :" ,full_data.columns)
+
+        if "Price_KRW" not in full_data.columns:
+            # 중복된 열이 있을 경우 하나를 선택 (Price_KRW_x 또는 Price_KRW_y)
+            if "Price_KRW_x" in full_data.columns:
+                full_data.rename(columns={"Price_KRW_x": "Price_KRW"}, inplace=True)
+            elif "Price_KRW_y" in full_data.columns:
+                full_data.rename(columns={"Price_KRW_y": "Price_KRW"}, inplace=True)
+            else:
+                raise KeyError("Price_KRW 열을 찾을 수 없습니다.")
+            
+
+        full_data["Gender"] = full_data["Gender"].map({"M" : 0, "F": 1})
+        numerical_data = full_data[["Quantity", "Price_KRW", "TotalAmount", "Satisfaction", "Age", "Gender"]]
+
+        pca = PCA(n_components=n_components)
+        principal_components = pca.fit_transform(numerical_data)
+        reduced_data = pd.DataFrame(
+            principal_components, 
+            columns=[f"PC{i+1}" for i in range(n_components)]
+        )
+
+        reduced_data["CustomerID"] = full_data["CustomerID"]
+
+        # RFM 데이터 생성
+        rfm = self.prepare_data()
+
+        # CustomerID를 인덱스에서 열로 리셋
+        rfm = rfm.reset_index()
+
+        # PCA 결과와 RFM 데이터를 CustomerID로 병합
+        merged_data = reduced_data.merge(rfm[["CustomerID", "Churn"]], on="CustomerID")
+        X = merged_data.drop(["CustomerID", "Churn"], axis=1)
+        y = merged_data["Churn"]
+
+        # 데이터 분리
+        return train_test_split(X, y, test_size=0.3, random_state=42)
+ 
+    def train_model_with_pca(self, X_train, y_train):
+        """
+        PCA 데이터를 사용한 모델 학습.
+        """
+        model = LogisticRegression(random_state=42)
+        model.fit(X_train, y_train)
+        return model
+
+    def evaluate_model_with_pca(self, model, X_test, y_test):
+        """
+        PCA 데이터를 사용한 모델 평가.
+        """
+        y_pred = model.predict(X_test)
+        accuracy = accuracy_score(y_test, y_pred)
+        report = classification_report(y_test, y_pred, output_dict=True)
+        return accuracy, report

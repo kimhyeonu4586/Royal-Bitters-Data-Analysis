@@ -15,3 +15,10 @@ class CustomerService(ABC):
         구매 동향 분석 수행.
         """
         pass
+
+    @abstractmethod
+    async def predict_churn_with_pca(self) -> dict:
+        """
+        PCA를 적용한 고객 이탈 예측 수행.
+        """
+        pass
