@@ -4,6 +4,10 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, accuracy_score
 from customer_analysis.repository.customer_analysis_repository import CustomerRepository
 from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+
+
+import os
 
 
 class CustomerRepositoryImpl(CustomerRepository):
@@ -35,6 +39,11 @@ class CustomerRepositoryImpl(CustomerRepository):
         rfm = rfm.join(customer_info)
         # 이탈 여부 생성
         rfm["Churn"] = (rfm["Recency"] > 90).astype(int)
+
+        os.makedirs("./data", exist_ok=True)
+        rfm.to_csv("./data/rfm.csv", index = True)
+        print("csv file made")
+
         return rfm
 
     def split_data(self, rfm):
@@ -46,11 +55,19 @@ class CustomerRepositoryImpl(CustomerRepository):
 
     def train_model(self, X_train, y_train):
         # Logistic Regression 모델 학습
-        model = LogisticRegression(random_state=42)
+        scaler = StandardScaler()
+        X_train = scaler.fit_transform(X_train)
+
+        # Logistic Regression 모델 학습
+        model = LogisticRegression(random_state=42, max_iter=500, class_weight = 'balanced')
         model.fit(X_train, y_train)
         return model
 
     def evaluate_model(self, model, X_test, y_test):
+        # 데이터 스케일링
+        scaler = StandardScaler()
+        X_test = scaler.fit_transform(X_test)
+
         # 모델 평가
         y_pred = model.predict(X_test)
         accuracy = accuracy_score(y_test, y_pred)
@@ -169,14 +186,20 @@ class CustomerRepositoryImpl(CustomerRepository):
         """
         PCA 데이터를 사용한 모델 학습.
         """
-        model = LogisticRegression(random_state=42)
+        scaler = StandardScaler()
+        X_train = scaler.fit_transform(X_train)
+
+        # Logistic Regression 모델 학습
+        model = LogisticRegression(random_state=42, max_iter=500, class_weight = 'balanced')
         model.fit(X_train, y_train)
         return model
 
     def evaluate_model_with_pca(self, model, X_test, y_test):
-        """
-        PCA 데이터를 사용한 모델 평가.
-        """
+        # 데이터 스케일링
+        scaler = StandardScaler()
+        X_test = scaler.fit_transform(X_test)
+
+        # 모델 평가
         y_pred = model.predict(X_test)
         accuracy = accuracy_score(y_test, y_pred)
         report = classification_report(y_test, y_pred, output_dict=True)

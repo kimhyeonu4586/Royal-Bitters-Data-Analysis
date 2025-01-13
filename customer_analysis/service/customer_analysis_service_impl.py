@@ -3,6 +3,7 @@ from customer_analysis.service.customer_analysis_service import CustomerService
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report
 
+import json
 
 class CustomerServiceImpl(CustomerService):
     def __init__(self):
@@ -20,6 +21,11 @@ class CustomerServiceImpl(CustomerService):
 
         # 모델 평가
         accuracy, report = self.__repository.evaluate_model(model, X_test, y_test)
+        # f1_score = report["weighted avg"]["f1-score"]
+
+        # with open('./graphs/logistic_regression_metrics.json', 'w') as f:
+        #     json.dump({"accuracy": accuracy, "f1_score" : f1_score}, f)
+
 
         return {
             "accuracy": accuracy,
@@ -40,6 +46,10 @@ class CustomerServiceImpl(CustomerService):
         model = self.__repository.train_model_with_pca(X_train, y_train)
         
         accuracy, report = self.__repository.evaluate_model_with_pca(model, X_test, y_test)
+        # f1_score = report["weighted avg"]["f1_score"]
+
+        # with open('./graphs/pca_logistic_regression_metrics.json', 'w') as f:
+        #     json.dump({"accuracy": accuracy, "f1_score": f1_score}, f)
 
         print(X_train.shape, y_train.shape)
         print(X_test.shape, y_test.shape)

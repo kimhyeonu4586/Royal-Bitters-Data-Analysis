@@ -101,8 +101,106 @@ def plot_product_satisfaction(products_file_path, purchases_file_path):
     plt.savefig('./graphs/product_satisfaction.png')
     plt.show()
 
+def plot_monthly_sales(purchases_file_path):
+    # Load purchases dataset
+    purchases = pd.read_csv(purchases_file_path)
+
+    # Convert purchaseDate to datetime and extract month-year
+    purchases['purchaseDate'] = pd.to_datetime(purchases['purchaseDate'])
+    purchases['MonthYear'] = purchases['purchaseDate'].dt.to_period('M').astype(str)
+
+    # Calculate total sales per month
+    monthly_sales = purchases.groupby('MonthYear')['Quantity'].sum()
+
+    # Sort by date order
+    monthly_sales = monthly_sales.sort_index()
+
+    # Plot
+    plt.figure(figsize=(12, 8))
+    monthly_sales.plot(kind='line', marker='o', color='teal')
+    plt.title('Monthly Sales Trend')
+    plt.xlabel('Month-Year')
+    plt.ylabel('Total Sales')
+    plt.xticks(rotation=45)
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+
+    # Save and show plot
+    os.makedirs('./graphs', exist_ok=True)
+    plt.tight_layout()
+    plt.savefig('./graphs/monthly_sales_trend.png')
+    plt.show()
+
+    def plot_churn_distribution(rfm_file_path):
+    # Load RFM data
+    rfm = pd.read_csv(rfm_file_path)
+
+    # Churn distribution
+    churn_distribution = rfm['Churn'].value_counts()
+    labels = ['Not Churned', 'Churned']
+    colors = ['lightblue', 'salmon']
+    explode = [0, 0.1]  # Highlight Churned
+
+    # Plot
+    plt.figure(figsize=(8, 6))
+    plt.pie(
+        churn_distribution,
+        labels=labels,
+        autopct='%1.1f%%',
+        startangle=90,
+        colors=colors,
+        explode=explode,
+        textprops={'fontsize': 12}
+    )
+    plt.title('Churn Distribution', fontsize=16)
+
+    # Save and show plot
+    os.makedirs('./graphs', exist_ok=True)
+    plt.savefig('./graphs/churn_distribution.png')
+    plt.show()
+
+def plot_modeling_results(metrics):
+    """
+    metrics: A dictionary containing results for 'Logistic Regression' and 'PCA + Logistic Regression'.
+    Example:
+    metrics = {
+        "Logistic Regression": {"accuracy": 0.95, "f1_score": 0.94},
+        "PCA + Logistic Regression": {"accuracy": 0.85, "f1_score": 0.83}
+    }
+    """
+    categories = list(metrics.keys())
+    accuracy = [metrics[cat]['accuracy'] for cat in categories]
+    f1_score = [metrics[cat]['f1_score'] for cat in categories]
+
+    # Bar width
+    bar_width = 0.35
+    index = range(len(categories))
+
+    # Plot
+    plt.figure(figsize=(10, 6))
+    plt.bar(index, accuracy, bar_width, label='Accuracy', color='lightblue')
+    plt.bar(
+        [i + bar_width for i in index],
+        f1_score,
+        bar_width,
+        label='F1 Score',
+        color='salmon'
+    )
+
+    plt.xlabel('Model', fontsize=12)
+    plt.ylabel('Score', fontsize=12)
+    plt.title('Modeling Results Comparison', fontsize=16)
+    plt.xticks([i + bar_width / 2 for i in index], categories)
+    plt.legend()
+
+    # Save and show plot
+    os.makedirs('./graphs', exist_ok=True)
+    plt.tight_layout()
+    plt.savefig('./graphs/modeling_results_comparison.png')
+    plt.show()
+
 
 plot_customer_gender_distribution('./customers.csv')
 plot_customer_age_distribution('./customers.csv')
 plot_product_sales('./products.csv', './purchases.csv')
 plot_product_satisfaction('./products.csv', './purchases.csv')
+plot_monthly_sales('./purchases.csv')
