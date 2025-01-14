@@ -130,7 +130,7 @@ def plot_monthly_sales(purchases_file_path):
     plt.savefig('./graphs/monthly_sales_trend.png')
     plt.show()
 
-    def plot_churn_distribution(rfm_file_path):
+def plot_churn_distribution(rfm_file_path):
     # Load RFM data
     rfm = pd.read_csv(rfm_file_path)
 
@@ -198,9 +198,49 @@ def plot_modeling_results(metrics):
     plt.savefig('./graphs/modeling_results_comparison.png')
     plt.show()
 
+def plot_customer_churn(file_path):
+    """
+    Plots a pie chart of customer retention vs churn based on the 'Churn' column in a CSV file.
+
+    Parameters:
+    - file_path (str): Path to the CSV file containing a 'Churn' column with 0 for retained customers and 1 for churned customers.
+    """
+    # Load the data from the CSV file
+    data = pd.read_csv(file_path)
+    
+    # Count the number of retained and churned customers
+    customer_status = data['Churn'].value_counts()
+    retained = customer_status.get(0, 0)
+    churned = customer_status.get(1, 0)
+
+    # Calculate the percentages
+    total_customers = retained + churned
+    retained_percentage = (retained / total_customers) * 100
+    churned_percentage = (churned / total_customers) * 100
+
+    # Create a pie chart
+    plt.figure(figsize=(8, 6))
+    plt.pie(
+        [retained_percentage, churned_percentage],
+        labels=['Retained', 'Churned'],
+        autopct='%1.1f%%',
+        startangle=140
+    )
+
+    os.makedirs('./graphs', exist_ok=True)
+    plt.tight_layout()
+    plt.savefig('./graphs/Customer Retention vs Churn.png')
+    plt.show()
+
+
+
+
+
 
 plot_customer_gender_distribution('./customers.csv')
 plot_customer_age_distribution('./customers.csv')
 plot_product_sales('./products.csv', './purchases.csv')
 plot_product_satisfaction('./products.csv', './purchases.csv')
 plot_monthly_sales('./purchases.csv')
+plot_customer_churn('./rfm.csv')
+plot_churn_distribution('./rfm.csv')
